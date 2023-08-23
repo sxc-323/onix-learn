@@ -20,7 +20,7 @@ mov bl,4; 扇区数量
 
 call read_disk
 
-xchg bx,bx;
+;xchg bx,bx;
 
 cmp word [0x1000],0x55aa
 jnz error
