@@ -55,6 +55,31 @@ clean:
 
 test:$(BUILD)/master.img
 
+.PHONY:bochsg
+bochsg:$(BUILD)/master.img
+	bochs-gdb -q -f ../bochs/bochsrc.gdb
+
 .PHONY:bochs
 bochs:$(BUILD)/master.img
-	bochs -q 
+	bochs -q -f ../bochs/bochsrc
+
+.PHONY:qemu
+qemu:$(BUILD)/master.img
+	qemu-system-i386 \
+	-m 32M \
+	-boot c \
+	-hda $<
+
+.PHONY:qemug
+qemug:$(BUILD)/master.img
+	qemu-system-i386 \
+	-s -S \	   #qemug 调试 
+	-m 32M \
+	-boot c \
+	-hda $<
+
+$(BUILD)/master.vmdk:$(BUILD)/master.img
+	qemu-img convert -O vmdk $< $@
+
+.PHONY:vmdk
+vmdk:$(BUILD)/master.vmdk
