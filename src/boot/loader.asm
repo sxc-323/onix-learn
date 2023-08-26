@@ -29,7 +29,7 @@ detect_memory:
     jmp prepare_protected_mode
 
 prepare_protected_mode:
-    xchg bx,bx
+    ; xchg bx,bx
     
     cli;关闭中断
 
@@ -81,7 +81,7 @@ protect_mode:
 
     mov esp, 0x10000
 
-    mov byte [0xb8000],'P'
+    ; mov byte [0xb8000],'P'
 
     mov edi,0x10000; 读取的目标内存
     mov ecx,10; 起始扇区
