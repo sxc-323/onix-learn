@@ -7,11 +7,16 @@ CFLAGS+= -fno-pic	# 不需要 位置无关的代码 position independent code
 # CFLAGS+= -fno-pie	# 不需要 位置无关的代码 position independent executable
 # CFLAGS+= -nostdlib	# 不需要标准库
 # CFLAGS+= -fno-stack-protector # 不需要栈保护
-CFLAGS+= -fomit-frame-pointer # 不需要栈帧
+# CFLAGS+= -fomit-frame-pointer # 不需要栈帧
 CFLAGS+= -mpreferred-stack-boundary=2 # 不需要栈对齐
 CFLAGS+= -fno-asynchronous-unwind-tables	# 不需要CFI信息
+# CFLAGS+= -O
 CFLAGS:=$(strip ${CFLAGS})
 
 .PHONY: hello.s
 hello.s:hello.c
+	gcc $(CFLAGS) -S $< -o $@
+
+.PHONY: param.s
+param.s:param.c
 	gcc $(CFLAGS) -S $< -o $@
