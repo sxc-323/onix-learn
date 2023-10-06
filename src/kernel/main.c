@@ -4,15 +4,13 @@
 #include <onix/string.h>
 #include <onix/console.h>
 #include <onix/printk.h>
+#include <onix/assert.h>
 
 void kernel_init()
 {
     console_init();
-    int cnt=50;
-    while (cnt--)
-    {
-        printk("hello onix %#010x,%d\n",cnt,cnt);
-    }
-    
+    assert(3<5);
+    //assert(3>5);
+    panic("out of memory");
     return;
 }
