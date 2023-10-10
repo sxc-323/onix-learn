@@ -38,6 +38,7 @@ $(BUILD)/kernel.bin: \
 	$(BUILD)/lib/vsprintf.o \
 	$(BUILD)/kernel/assert.o \
 	$(BUILD)/kernel/debug.o \
+	$(BUILD)/kernel/global.o \
 
 	$(shell mkdir -p $(dir $@))
 	ld -m elf_i386 -static $^ -o $@ -Ttext $(ENTRYPOINT)
