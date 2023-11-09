@@ -149,12 +149,13 @@ static void command_bs()
     }
 }
 
-
 static void command_del()
 {
    
         *(u16 *)pos=erase;
 }
+
+extern void start_beep();
 
 void console_write(char * buf,u32 count)
 {
@@ -180,6 +181,7 @@ void console_write(char * buf,u32 count)
 // #define ASCII_CR  0x0D  //\r
 // #define ASCII_DEL  0x7F
         case ASCII_BEL:
+            start_beep();
             break;
         case ASCII_BS: 
             command_bs();
