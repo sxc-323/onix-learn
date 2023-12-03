@@ -91,12 +91,42 @@ void set_interrupt_mask(u32 irq,bool enable)
     }
 }
 
-u32 counter =0;
+// 清除 IF 位，返回设置之前的值
+bool interrupt_disable()
+{
+    asm volatile(
+        "pushfl\n"          // 将当前eflags 压入栈中
+        "cli\n"             // 清除 IF 位，此时外中断已被屏蔽
+        "popl %eax\n"       // 将刚才压入的eflags 弹出到 eax
+        "shrl $9, %eax\n"   // 将eax 右移9位，得到IF位
+        "andl $1, %eax\n"   // 只需要IF位
+    );
+}
+
+// 获得 IF 位
+bool get_interrupt_state()
+{
+    asm volatile(
+        "pushfl\n"          // 将当前eflags 压入栈中
+        "popl %eax\n"       // 将刚才压入的eflags 弹出到 eax
+        "shrl $9, %eax\n"   // 将eax 右移9位，得到IF位
+        "andl $1, %eax\n"   // 只需要IF位
+    );
+}
+
+// 设置 IF位
+void set_interrupt_state(bool state)
+{
+    if (state)
+        asm volatile("sti\n");
+    else
+        asm volatile("cli\n");
+}
 
 void default_handler(int vector)
 {
     send_eoi(vector);
-    DEBUGK("[%x] default interrupt called %d...\n", vector,counter);
+    DEBUGK("[%x] default interrupt called...\n", vector);
 }
 
 void exception_handler(
