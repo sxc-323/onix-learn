@@ -27,7 +27,6 @@ $(BUILD)/%.o: $(SRC)/%.c
 	$(shell mkdir -p $(dir $@))
 	gcc $(CFLAGS) $(DEBUG) $(INCLUDE) -c $< -o $@
 
-
 $(BUILD)/kernel.bin: \
 	$(BUILD)/kernel/start.o \
 	$(BUILD)/kernel/main.o \
@@ -45,6 +44,7 @@ $(BUILD)/kernel.bin: \
 	$(BUILD)/kernel/time.o \
 	$(BUILD)/kernel/rtc.o \
 	$(BUILD)/kernel/memory.o \
+	$(BUILD)/kernel/bitmap.o \
 	$(BUILD)/lib/string.o \
 	$(BUILD)/lib/vsprintf.o \
 	$(BUILD)/lib/stdlib.o \
@@ -86,11 +86,11 @@ clean:
 
 .PHONY:bochsg
 bochsg:$(BUILD)/master.img
-	bochs-gdb -q -f ../bochs/bochsrc.gdb
+	bochs-gdb -q -f ../bochs/bochsrc.gdb -unlock
 
 .PHONY:bochs
 bochs:$(BUILD)/master.img
-	bochs -q -f ../bochs/bochsrc
+	bochs -q -f ../bochs/bochsrc -unlock
 
 QEMU:=qemu-system-i386 \
 	-m 32m \
