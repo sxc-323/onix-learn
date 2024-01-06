@@ -1,6 +1,7 @@
 #include<onix/io.h>
 #include<onix/console.h>
 #include<onix/string.h>
+#include<onix/interrupt.h>
 
 // - CRT 地址寄存器 0x3D4
 // - CRT 数据寄存器 0x3D5
@@ -151,7 +152,6 @@ static void command_bs()
 
 static void command_del()
 {
-   
         *(u16 *)pos=erase;
 }
 
@@ -159,9 +159,9 @@ extern void start_beep();
 
 void console_write(char * buf,u32 count)
 {
-    char ch;
-    
+    bool intr=interrupt_disable();  // 禁止中断
 
+    char ch;
     while (count--)
     {
         ch=*buf++;
@@ -220,6 +220,9 @@ void console_write(char * buf,u32 count)
         }
     }
     set_cursor();
+
+    // 恢复中断
+    set_interrupt_state(intr);
 }
 
 
