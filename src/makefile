@@ -45,9 +45,11 @@ $(BUILD)/kernel.bin: \
 	$(BUILD)/kernel/rtc.o \
 	$(BUILD)/kernel/memory.o \
 	$(BUILD)/kernel/bitmap.o \
+	$(BUILD)/kernel/gate.o \
 	$(BUILD)/lib/string.o \
 	$(BUILD)/lib/vsprintf.o \
 	$(BUILD)/lib/stdlib.o \
+	$(BUILD)/lib/syscall.o \
 
 	$(shell mkdir -p $(dir $@))
 	ld -m elf_i386 -static $^ -o $@ -Ttext $(ENTRYPOINT)
