@@ -22,6 +22,8 @@
 #define CMOS_D 0x0d
 #define CMOS_NMI 0x80
 
+extern void start_beep();
+
 // 读 cmos 寄存器的值
 u8 cmos_read(u8 addr)
 {
