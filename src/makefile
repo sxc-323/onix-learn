@@ -119,7 +119,7 @@ bochs:$(BUILD)/master.img
 
 .PHONY:bochsb
 bochsb: $(BUILD)/kernel.iso
-	bochs -q -f ../bochs/bochsrc.grub -unlock
+	bochs -q -f ../bochs/bochsrc.grub -unlock -debugger
 
 QEMU:=qemu-system-i386 \
 	-m 32m \
