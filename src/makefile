@@ -55,6 +55,7 @@ $(BUILD)/kernel.bin: \
 	$(BUILD)/kernel/bitmap.o \
 	$(BUILD)/kernel/gate.o \
 	$(BUILD)/kernel/mutex.o \
+	$(BUILD)/kernel/keyboard.o \
 	$(BUILD)/lib/string.o \
 	$(BUILD)/lib/vsprintf.o \
 	$(BUILD)/lib/stdlib.o \
