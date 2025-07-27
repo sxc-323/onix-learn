@@ -8,6 +8,9 @@
 #define KEYBOARD_DATA_PORT 0x60
 #define KEYBOARD_CTRL_PORT 0x64
 
+#define KEYBOARD_CMD_LED 0xED   // 设置 LED状态
+#define KEYBOARD_CMD_ACK 0xFA   // ACK
+
 #define INV 0 // 不可见字符
 
 #define CODE_PRINT_SCREEN_DOWN 0xB7
@@ -117,8 +120,8 @@ typedef enum
 static char keymap[][4] =
 {
     /* 扫描码 未与 shift 组合 与 shift 组合 以及相关*/
-    /* 0x00 */ {INV,INV,false,false},
-    /* 0x01 */ {0x1b,0x1b,false,false},
+    /* 0x00 */ {INV,INV,false,false},       // NULL
+    /* 0x01 */ {0x1b,0x1b,false,false},     // ESC
     /* 0x02 */ {'1','!',false,false},
     /* 0x03 */ {'2','@',false,false},
     /* 0x04 */ {'3','#',false,false},
@@ -131,8 +134,8 @@ static char keymap[][4] =
     /* 0x0b */ {'0',')',false,false},
     /* 0x0c */ {'-','_',false,false},
     /* 0x0d */ {'=','+',false,false},
-    /* 0x0e */ {'\b','\b',false,false},
-    /* 0x0f */ {'\t','\t',false,false},
+    /* 0x0e */ {'\b','\b',false,false},     // backspace
+    /* 0x0f */ {'\t','\t',false,false},     // TAB
     /* 0x10 */ {'q','Q',false,false},
     /* 0x11 */ {'w','W',false,false},
     /* 0x12 */ {'e','E',false,false},
@@ -145,8 +148,8 @@ static char keymap[][4] =
     /* 0x19 */ {'p','P',false,false},
     /* 0x1a */ {'[','{',false,false},
     /* 0x1b */ {']','}',false,false},
-    /* 0x1c */ {'\n','\n',false,false},
-    /* 0x1d */ {INV,INV,false,false},
+    /* 0x1c */ {'\n','\n',false,false},     // ENTER
+    /* 0x1d */ {INV,INV,false,false},       // CTRL_L
     /* 0x1e */ {'a','A',false,false},
     /* 0x1f */ {'s','S',false,false},
     /* 0x20 */ {'d','D',false,false},
@@ -159,7 +162,7 @@ static char keymap[][4] =
     /* 0x27 */ {';',':',false,false},
     /* 0x28 */ {'\'', '"',false,false},
     /* 0x29 */ {'`', '~',false,false},
-    /* 0x2a */ {INV,INV,false,false},
+    /* 0x2a */ {INV,INV,false,false},       // SHIFT_L
     /* 0x2b */ {'\\', '|',false,false},
     /* 0x2c */ {'z','Z',false,false},
     /* 0x2d */ {'x','X',false,false},
@@ -171,50 +174,50 @@ static char keymap[][4] =
     /* 0x33 */ {',', '<',false,false},
     /* 0x34 */ {'.', '>',false,false},
     /* 0x35 */ {'/', '?',false,false},
-    /* 0x36 */ {INV,INV,false,false},
-    /* 0x37 */ {'*','*',false,false},
-    /* 0x38 */ {INV,INV,false,false},
-    /* 0x39 */ {' ',' ',false,false},
-    /* 0x3a */ {INV,INV,false,false},
-    /* 0x3b */ {INV,INV,false,false},
-    /* 0x3c */ {INV,INV,false,false},
-    /* 0x3d */ {INV,INV,false,false},
-    /* 0x3e */ {INV,INV,false,false},
-    /* 0x3f */ {INV,INV,false,false},
-    /* 0x40 */ {INV,INV,false,false},
-    /* 0x41 */ {INV,INV,false,false},
-    /* 0x42 */ {INV,INV,false,false},
-    /* 0x43 */ {INV,INV,false,false},
-    /* 0x44 */ {INV,INV,false,false},
-    /* 0x45 */ {INV,INV,false,false},
-    /* 0x46 */ {INV,INV,false,false},
-    /* 0x47 */ {'7',INV,false,false},
-    /* 0x48 */ {'8',INV,false,false},
-    /* 0x49 */ {'9',INV,false,false},
-    /* 0x4a */ {'-','-',false,false},
-    /* 0x4b */ {'4',INV,false,false},
-    /* 0x4c */ {'5',INV,false,false},
-    /* 0x4d */ {'6',INV,false,false},
-    /* 0x4e */ {'+','+',false,false},
-    /* 0x4f */ {'1',INV,false,false},
-    /* 0x50 */ {'2',INV,false,false},
-    /* 0x51 */ {'3',INV,false,false},
-    /* 0x52 */ {'0',INV,false,false},
-    /* 0x53 */ {'.',0x7F,false,false},   // pad . - Delete
+    /* 0x36 */ {INV,INV,false,false},       // SHIFT_R
+    /* 0x37 */ {'*','*',false,false},       // PAD *
+    /* 0x38 */ {INV,INV,false,false},       // ALT_L
+    /* 0x39 */ {' ',' ',false,false},       // SPACE
+    /* 0x3a */ {INV,INV,false,false},       // CAPSLOCK
+    /* 0x3b */ {INV,INV,false,false},       // F1
+    /* 0x3c */ {INV,INV,false,false},       // F2
+    /* 0x3d */ {INV,INV,false,false},       // F3
+    /* 0x3e */ {INV,INV,false,false},       // F4
+    /* 0x3f */ {INV,INV,false,false},       // F5
+    /* 0x40 */ {INV,INV,false,false},       // F6
+    /* 0x41 */ {INV,INV,false,false},       // F7
+    /* 0x42 */ {INV,INV,false,false},       // F8
+    /* 0x43 */ {INV,INV,false,false},       // F9
+    /* 0x44 */ {INV,INV,false,false},       // F10
+    /* 0x45 */ {INV,INV,false,false},       // NUMLOCK
+    /* 0x46 */ {INV,INV,false,false},       // SCROLOCK
+    /* 0x47 */ {'7',INV,false,false},       // pad 7 -Home
+    /* 0x48 */ {'8',INV,false,false},       // pad 8 -Up
+    /* 0x49 */ {'9',INV,false,false},       // pad 9 -PageUp
+    /* 0x4a */ {'-','-',false,false},       // pad -
+    /* 0x4b */ {'4',INV,false,false},       // pad 4 -Left
+    /* 0x4c */ {'5',INV,false,false},       // pad 5
+    /* 0x4d */ {'6',INV,false,false},       // pad 6 -Right
+    /* 0x4e */ {'+','+',false,false},       // pad +
+    /* 0x4f */ {'1',INV,false,false},       // pad 1 -End
+    /* 0x50 */ {'2',INV,false,false},       // pad 2 -Down
+    /* 0x51 */ {'3',INV,false,false},       // pad 3 -PageDown
+    /* 0x52 */ {'0',INV,false,false},       // pad 0
+    /* 0x53 */ {'.',0x7F,false,false},      // pad . - Delete
     /* 0x54 */ {INV,INV,false,false},
     /* 0x55 */ {INV,INV,false,false},
     /* 0x56 */ {INV,INV,false,false},
-    /* 0x57 */ {INV,INV,false,false},
-    /* 0x58 */ {INV,INV,false,false},
+    /* 0x57 */ {INV,INV,false,false},       // F11
+    /* 0x58 */ {INV,INV,false,false},       // F12
     /* 0x59 */ {INV,INV,false,false},
     /* 0x5a */ {INV,INV,false,false},
-    /* 0x5b */ {INV,INV,false,false},
-    /* 0x5c */ {INV,INV,false,false},
-    /* 0x5d */ {INV,INV,false,false},
+    /* 0x5b */ {INV,INV,false,false},       // Left Windows
+    /* 0x5c */ {INV,INV,false,false},       // Right Windows
+    /* 0x5d */ {INV,INV,false,false},       // Clipboard
     /* 0x5e */ {INV,INV,false,false},
 
     // Print Screen 是强制定义 本身为 0xB7
-    /* 0x5f */ {INV,INV,false,false}, //Print Screen
+    /* 0x5f */ {INV,INV,false,false},       //Print Screen
 };
 
 static bool capslock_state; // 大写锁定
@@ -230,6 +233,38 @@ static bool extcode_state;  // 扩展码状态
 
 // shift 键状态
 #define shift_state (keymap[KEY_SHIFT_L][2] || keymap[KEY_SHIFT_R][2])
+
+static void keyboard_wait()
+{
+    u8 state;
+    do
+    {
+        state =inb(KEYBOARD_CTRL_PORT);
+    } while (state & 0x02); // 读取键盘缓冲区，直到为空
+}
+
+static void keyboard_ack()
+{   
+    u8 state;
+    do
+    {
+        state =inb(KEYBOARD_DATA_PORT);
+    } while (state !=KEYBOARD_CMD_ACK);
+}
+
+static void set_leds()
+{ 
+    u8 leds = (capslock_state << 2) | (numlock_state << 1) | scrlock_state;
+    keyboard_wait();
+    // 设置 LED 命令
+    outb(KEYBOARD_DATA_PORT,KEYBOARD_CMD_LED);
+    keyboard_ack();
+
+    keyboard_wait();
+    // 设置 LED 灯状态
+    outb(KEYBOARD_DATA_PORT,leds);
+    keyboard_ack();
+}
 
 void keyboard_handler(int vector)
 { 
@@ -306,9 +341,14 @@ void keyboard_handler(int vector)
         led =true;
     }
 
+    if (led)
+    {
+        set_leds();
+    }
+
     // 计算 shift 状态
     bool shift =false;
-    if (capslock_state)
+    if (capslock_state && ('a'<= keymap[makecode][0] <='z'))
     {
         shift =!shift;
     }
@@ -341,6 +381,8 @@ void keyboard_init()
     scrlock_state = false;
     capslock_state = false;
     extcode_state = false;
+
+    set_leds();
 
     set_interrupt_handler(IRQ_KEYBOARD,keyboard_handler);
     set_interrupt_mask(IRQ_KEYBOARD,true);
