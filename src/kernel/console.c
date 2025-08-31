@@ -157,29 +157,19 @@ static void command_del()
 
 extern void start_beep();
 
-void console_write(char * buf,u32 count)
+int32 console_write(char * buf,u32 count)
 {
     bool intr=interrupt_disable();  // 禁止中断
 
     char ch;
-    while (count--)
+    int32 nr=0;
+    while (nr++<count)
     {
         ch=*buf++;
         switch (ch)
         {
         case ASCII_NUL:
             break;
-        
-// #define ASCII_NUL 0x00
-// #define ASCII_ENQ 0x05
-// #define ASCII_BEL 0x07  //\a
-// #define ASCII_BS  0x08  //\b
-// #define ASCII_HT  0x09  //\t
-// #define ASCII_LF  0x0A  //\n
-// #define ASCII_VT  0x0B  //\v
-// #define ASCII_FF  0x0C  //\f
-// #define ASCII_CR  0x0D  //\r
-// #define ASCII_DEL  0x7F
         case ASCII_BEL:
             start_beep();
             break;
@@ -223,9 +213,8 @@ void console_write(char * buf,u32 count)
 
     // 恢复中断
     set_interrupt_state(intr);
+    return nr;
 }
-
-
 
 void console_init()
 {
