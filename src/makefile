@@ -61,6 +61,7 @@ $(BUILD)/kernel.bin: \
 	$(BUILD)/lib/vsprintf.o \
 	$(BUILD)/lib/stdlib.o \
 	$(BUILD)/lib/syscall.o \
+	$(BUILD)/lib/printf.o	\
 	$(BUILD)/lib/list.o
 
 	$(shell mkdir -p $(dir $@))
