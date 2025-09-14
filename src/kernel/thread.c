@@ -3,6 +3,7 @@
 #include <onix/debug.h>
 #include <onix/task.h>
 #include <onix/stdio.h>
+#include <onix/arena.h>
 
 #define LOGK(fmt,args...) DEBUGK(fmt,##args)
 
@@ -30,10 +31,10 @@ static void real_init_thread()
     {
         // BMB;
         // asm volatile("in $0x92, %ax\n");
-        sleep(100);
+        sleep(1000);
         // LOGK("%c\n",ch);
         // printk("%c",ch);
-        printf("task is in user mode %d\n",counter++);
+        // printf("task is in user mode %d\n",counter++);
     }
 }
 
@@ -52,6 +53,18 @@ void test_thread()
     while (true)
     {
         // LOGK("test task %d....\n",counter++);
-        sleep(709);
+        void *ptr = kmalloc(1200);
+        LOGK("kmalloc 0x%p....\n",ptr);
+        kfree(ptr);
+
+        ptr = kmalloc(1024);
+        LOGK("kmalloc 0x%p....\n",ptr);
+        kfree(ptr);
+
+        ptr = kmalloc(54);
+        LOGK("kmalloc 0x%p....\n",ptr);
+        kfree(ptr);
+
+        sleep(5000);
     }
 }
